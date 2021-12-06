@@ -11,8 +11,14 @@ public class UndoRedoManager implements IUndoRedoManager {
 
     @Override
     public void executeCommand(Command command) {
+        try {
+            command.execute();
+        }
+        catch (Command.CommandExecutionException e) {
+            System.out.println("Action unsuccessful");
+            return;
+        }
         _redoStack.clear();
-        command.execute();
         _undoStack.push(command);
     }
 
@@ -29,7 +35,14 @@ public class UndoRedoManager implements IUndoRedoManager {
     public void redo() {
         if (canRedo()) {
             Command command = _redoStack.pop();
-            command.execute();
+            try {
+                command.execute();
+            }
+            catch (Command.CommandExecutionException e) {
+                _redoStack.clear();
+                System.out.println("Redo failed");
+                return;
+            }
             _undoStack.push(command);
         }
     }

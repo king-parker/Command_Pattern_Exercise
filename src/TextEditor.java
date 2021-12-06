@@ -109,9 +109,7 @@ class TextEditor {
             String deletionDistanceInput = scanner.next();
             int deletionDistance = validateNumberInput(deletionDistanceInput);
             if (deletionDistance != -1) {
-                if (_document.delete(deletionIndex, deletionDistance) == null) {
-                    System.out.println("Deletion unsuccessful");
-                }
+                _undoRedoManager.executeCommand(new DeleteCommand(_document, deletionIndex, deletionDistance));
             }
         }
     }
