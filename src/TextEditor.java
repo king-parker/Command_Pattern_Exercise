@@ -3,9 +3,11 @@ import java.util.Scanner;
 class TextEditor {
 
     private IDocument _document;
+    private IUndoRedoManager _undoRedoManager;
 
     TextEditor(IDocument document) {
         _document = document;
+        _undoRedoManager = new UndoRedoManager();
     }
 
     void run() {
@@ -40,10 +42,22 @@ class TextEditor {
                         _document.clear();
                         break;
                     case 8:
-                        System.out.println("Undo");
+                        if (_undoRedoManager.canUndo()) {
+                            _undoRedoManager.undo();
+                            System.out.println("Undo");
+                        }
+                        else {
+                            System.out.println("No commands to undo");
+                        }
                         break;
                     case 9:
-                        System.out.println("Redo");
+                        if (_undoRedoManager.canRedo()) {
+                            _undoRedoManager.redo();
+                            System.out.println("Redo");
+                        }
+                        else {
+                            System.out.println("No commands to redo");
+                        }
                         break;
                     case 10:
                         return;
@@ -80,7 +94,7 @@ class TextEditor {
         if (insertionIndex != -1) {
             System.out.print("Sequence to insert: ");
             String sequenceInput = scanner.next();
-            _document.insert(insertionIndex, sequenceInput);
+            _undoRedoManager.executeCommand(new InsertCommand(_document, insertionIndex, sequenceInput));
         }
     }
 
@@ -135,6 +149,7 @@ class TextEditor {
         System.out.print("Name of file to open: ");
         String openFileName = scanner.next();
         _document.open(openFileName);
+        _undoRedoManager.clear();
     }
 
     private int validateNumberInput(String input) {

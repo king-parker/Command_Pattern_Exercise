@@ -1,41 +1,52 @@
 import java.util.Stack;
 
-public class UndoRedoManager {
-    private Stack<Command> undoStack;
-    private Stack<Command> redoStack;
+public class UndoRedoManager implements IUndoRedoManager {
+    private Stack<Command> _undoStack;
+    private Stack<Command> _redoStack;
 
     public UndoRedoManager() {
-        undoStack = new Stack<>();
-        redoStack = new Stack<>();
+        _undoStack = new Stack<>();
+        _redoStack = new Stack<>();
     }
 
+    @Override
     public void executeCommand(Command command) {
-        redoStack.clear();
+        _redoStack.clear();
         command.execute();
-        undoStack.push(command);
+        _undoStack.push(command);
     }
 
+    @Override
     public void undo() {
         if (canUndo()) {
-            Command command = undoStack.pop();
+            Command command = _undoStack.pop();
             command.reverse();
-            redoStack.push(command);
+            _redoStack.push(command);
         }
     }
 
+    @Override
     public void redo() {
         if (canRedo()) {
-            Command command = redoStack.pop();
+            Command command = _redoStack.pop();
             command.execute();
-            undoStack.push(command);
+            _undoStack.push(command);
         }
     }
 
+    @Override
     public boolean canUndo() {
-        return !undoStack.isEmpty();
+        return !_undoStack.isEmpty();
     }
 
+    @Override
     public boolean canRedo() {
-        return !redoStack.isEmpty();
+        return !_redoStack.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        _undoStack.clear();
+        _redoStack.clear();
     }
 }
