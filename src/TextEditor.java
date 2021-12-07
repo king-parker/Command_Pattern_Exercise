@@ -127,8 +127,9 @@ class TextEditor {
             if (replaceDistance != -1) {
                 System.out.print("Replacement string: ");
                 String replacementString = scanner.next();
-                _document.delete(replaceIndex, replaceDistance);
-                _document.insert(replaceIndex, replacementString);
+                _undoRedoManager.executeCommand(new ReplaceCommand(_document, replaceIndex, replaceDistance, replacementString));
+//                _document.delete(replaceIndex, replaceDistance);
+//                _document.insert(replaceIndex, replacementString);
             }
         }
     }
