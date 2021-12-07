@@ -145,7 +145,7 @@ class TextEditor {
 
         System.out.print("Name of file to open: ");
         String openFileName = scanner.next();
-        _document.open(openFileName);
+        _undoRedoManager.executeCommand(new OpenCommand(_document, openFileName));
     }
 
     private int validateNumberInput(String input) {
