@@ -39,7 +39,7 @@ class TextEditor {
                         open();
                         break;
                     case 7:
-                        _document.clear();
+                        _undoRedoManager.executeCommand(new StartCommand(_document));
                         break;
                     case 8:
                         if (_undoRedoManager.canUndo()) {
@@ -128,8 +128,6 @@ class TextEditor {
                 System.out.print("Replacement string: ");
                 String replacementString = scanner.next();
                 _undoRedoManager.executeCommand(new ReplaceCommand(_document, replaceIndex, replaceDistance, replacementString));
-//                _document.delete(replaceIndex, replaceDistance);
-//                _document.insert(replaceIndex, replacementString);
             }
         }
     }
@@ -148,7 +146,6 @@ class TextEditor {
         System.out.print("Name of file to open: ");
         String openFileName = scanner.next();
         _document.open(openFileName);
-        _undoRedoManager.clear();
     }
 
     private int validateNumberInput(String input) {
